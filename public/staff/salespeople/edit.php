@@ -8,12 +8,16 @@ $salespeople_result = find_salesperson_by_id($_GET['id']);
 // No loop, only one result
 $salesperson = db_fetch_assoc($salespeople_result);
 
+// Set default values for all variables the page needs.
+$errors = array();
+
 if(is_post_request()) {
   // Confirm that values are present before accessing them.
   if(isset($_POST['first_name'])) { $salesperson['first_name'] = h($_POST['first_name']); }
   if(isset($_POST['last_name'])) { $salesperson['last_name'] = h($_POST['last_name']); }
   if(isset($_POST['phone'])) { $salesperson['phone'] = h($_POST['phone']); }
   if(isset($_POST['email'])) { $salesperson['email'] = h($_POST['email']); }
+  
   $result = update_salesperson($salesperson);
   if($result === true) {
     redirect_to('show.php?id=' . $salesperson['id']);
@@ -21,9 +25,8 @@ if(is_post_request()) {
     $errors = $result;
   }
 }
-
-
 ?>
+
 <?php $page_title = 'Staff: Edit Salesperson ' . $salesperson['first_name'] . " " . $salesperson['last_name']; ?>
 <?php include(SHARED_PATH . '/header.php'); ?>
 
